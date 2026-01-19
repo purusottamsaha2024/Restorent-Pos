@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Kitchen View{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; padding: 24px;">
+    <h1 style="margin-bottom: 24px;">👨‍🍳 KITCHEN QUEUE</h1>
+    <div id="kitchen-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+        <!-- Orders Injected Here -->
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/kitchen.js"></script>
+{% endblock %}

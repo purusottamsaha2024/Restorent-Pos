@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Petote Analytics{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; padding: 24px; margin: 0 auto; color: #fff;">
+    <h1 style="margin-bottom: 32px; font-size: 2.5rem;">📊 Business Analytics</h1>
+
+    <!-- KPI Cards -->
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 40px;">
+        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
+            <div style="color: #888; margin-bottom: 8px;">Total Revenue</div>
+            <div id="kpi-revenue" style="font-size: 2.5rem; font-weight: bold; color: var(--success);">₡0</div>
+        </div>
+        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
+            <div style="color: #888; margin-bottom: 8px;">Total Orders</div>
+            <div id="kpi-orders" style="font-size: 2.5rem; font-weight: bold; color: var(--primary);">0</div>
+        </div>
+        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
+            <div style="color: #888; margin-bottom: 8px;">Avg Order Value</div>
+            <div id="kpi-aov" style="font-size: 2.5rem; font-weight: bold;">₡0</div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+        <!-- Hourly Sales -->
+        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
+            <h3 style="margin-bottom: 20px;">Hourly Sales (Self-Refreshing)</h3>
+            <canvas id="chart-hourly"></canvas>
+        </div>
+
+        <!-- Top Items -->
+        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
+            <h3 style="margin-bottom: 20px;">Top Selling Items</h3>
+            <canvas id="chart-items"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function fetchAnalytics() {
+        const res = await fetch('/api/analytics');
+        const data = await res.json();
+        renderDashboard(data);
+    }
+
+    function renderDashboard(data) {
+        // KPIs
+        document.getElementById('kpi-revenue').textContent = '₡' + data.total_revenue.toLocaleString();
+        document.getElementById('kpi-orders').textContent = data.total_orders;
+        document.getElementById('kpi-aov').textContent = '₡' + data.average_order_value.toLocaleString();
+
+        // Hourly Chart
+        const hours = Object.keys(data.hourly_sales).map(h => `${h}:00`);
+        const sales = Object.values(data.hourly_sales);
+
+        if (window.hourlyChart) window.hourlyChart.destroy();
+        window.hourlyChart = new Chart(document.getElementById('chart-hourly'), {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Sales (₡)',
+                    data: sales,
+                    borderColor: '#00e676',
+                    backgroundColor: 'rgba(0, 230, 118, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+
+        // Items Chart
+        const items = Object.keys(data.top_items);
+        const counts = Object.values(data.top_items);
+
+        if (window.itemChart) window.itemChart.destroy();
+        window.itemChart = new Chart(document.getElementById('chart-items'), {
+            type: 'bar',
+            data: {
+                labels: items,
+                datasets: [{
+                    label: 'Quantity Sold',
+                    data: counts,
+                    backgroundColor: ['#FFD700', '#FF4500', '#2979ff', '#aa00ff', '#00e676'],
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+    }
+
+    fetchAnalytics();
+    // Refresh every 30s
+    setInterval(fetchAnalytics, 30000); 
+</script>
+{% endblock %}

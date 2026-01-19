@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Petote POS{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <nav
+        style="background: #000; padding: 10px; display: flex; gap: 20px; border-bottom: 1px solid #333; justify-content: center;">
+        <a href="/staff" style="color: #fff; text-decoration: none; font-weight: bold;">staff</a>
+        <a href="/kitchen" style="color: #fff; text-decoration: none; font-weight: bold;">kitchen</a>
+        <a href="/customer" style="color: #fff; text-decoration: none; font-weight: bold;">customer</a>
+        <a href="/analytics" style="color: #ffd700; text-decoration: none; font-weight: bold;">analytics</a>
+    </nav>
+    {% block content %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

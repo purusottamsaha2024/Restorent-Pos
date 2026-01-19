@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Petote POS{% endblock %}
+
+{% block content %}
+<div class="pos-container">
+    <!-- Main Grid -->
+    <div class="menu-grid">
+        <!-- COMBO 1 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 1 (4 Pc)', 3300, 'combo_1.png')">
+            <img src="/static/images/combo_4.png" alt="Combo 1">
+            <div class="qty-badge hidden" id="qty-Combo 1 (4 Pc)">0</div>
+            <div class="price-tag">₡3,300</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 1 (4 Pcs)</span>
+            </div>
+        </div>
+
+        <!-- COMBO 2 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 2 (8 Pc)', 6500, 'combo_8.png')">
+            <img src="/static/images/combo_8.png" alt="Combo 2">
+            <div class="qty-badge hidden" id="qty-Combo 2 (8 Pc)">0</div>
+            <div class="price-tag">₡6,500</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 2 (8 Pcs)</span>
+            </div>
+        </div>
+
+        <!-- COMBO 3 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 3 (12 Pc)', 9700, 'combo_12.png')">
+            <img src="/static/images/combo_12.png" alt="Combo 3">
+            <div class="qty-badge hidden" id="qty-Combo 3 (12 Pc)">0</div>
+            <div class="price-tag">₡9,700</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 3 (12 Pcs)</span>
+            </div>
+        </div>
+
+        <!-- COMBO 4 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 4 (16 Pc)', 12800, 'combo_16.png')">
+            <img src="/static/images/combo_16.png" alt="Combo 4">
+            <div class="qty-badge hidden" id="qty-Combo 4 (16 Pc)">0</div>
+            <div class="price-tag">₡12,800</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 4 (16 Pcs)</span>
+            </div>
+        </div>
+
+        <!-- COMBO 5 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 5 (Fam 8)', 10400, 'familiar.png')">
+            <img src="/static/images/familiar.png" alt="Combo 5">
+            <div class="qty-badge hidden" id="qty-Combo 5 (Fam 8)">0</div>
+            <div class="price-tag">₡10,400</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 5 (Fam 8)</span>
+            </div>
+        </div>
+
+        <!-- COMBO 6 -->
+        <div class="menu-item main-item" onclick="addToOrder('Combo 6 (Fam 16)', 16800, 'familiar.png')">
+            <img src="/static/images/familiar.png" alt="Combo 6">
+            <div class="qty-badge hidden" id="qty-Combo 6 (Fam 16)">0</div>
+            <div class="price-tag">₡16,800</div>
+            <div class="item-overlay">
+                <span class="item-name">Combo 6 (Fam 16)</span>
+            </div>
+        </div>
+
+        <!-- PERSONAL & PORTIONS -->
+        <div class="menu-item main-item" onclick="addToOrder('Personal (2 Pc)', 2000, 'personal.png')">
+            <img src="/static/images/personal.png" alt="Personal">
+            <div class="qty-badge hidden" id="qty-Personal (2 Pc)">0</div>
+            <div class="price-tag">₡2,000</div>
+            <div class="item-overlay">
+                <span class="item-name">Personal (2 Pc)</span>
+            </div>
+        </div>
+
+        <div class="menu-item main-item" onclick="addToOrder('Portion Breast+Wing', 1800, 'personal.png')">
+            <!-- Using Personal img for now as fallback -->
+            <img src="/static/images/personal.png" alt="Breast+Wing">
+            <div class="qty-badge hidden" id="qty-Portion Breast+Wing">0</div>
+            <div class="price-tag">₡1,800</div>
+            <div class="item-overlay">
+                <span class="item-name">Pechuga + Ala</span>
+            </div>
+        </div>
+
+        <div class="menu-item main-item" onclick="addToOrder('Portion Thigh+Leg', 1500, 'personal.png')">
+            <img src="/static/images/personal.png" alt="Thigh+Leg">
+            <div class="qty-badge hidden" id="qty-Portion Thigh+Leg">0</div>
+            <div class="price-tag">₡1,500</div>
+            <div class="item-overlay">
+                <span class="item-name">Muslo + Cadera</span>
+            </div>
+        </div>
+
+        <!-- EXTRAS ROW -->
+        <h2 style="grid-column: 1/-1; margin-top: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">EXTRAS</h2>
+
+        <div class="menu-item extra-item" onclick="addToOrder('Fries', 1000, 'fries_placeholder')">
+            <!-- Placeholder for Fries -->
+            <div class="placeholder-img" style="background: #e6b800;">🍟</div>
+            <div class="qty-badge hidden" id="qty-Fries">0</div>
+            <div class="price-tag small">₡1,000</div>
+            <div class="item-overlay">
+                <span class="item-name">Fries</span>
+            </div>
+        </div>
+
+        <div class="menu-item extra-item" onclick="addToOrder('Soda', 800, 'soda_placeholder')">
+            <!-- Placeholder for Soda -->
+            <div class="placeholder-img" style="background: #cc0000;">🥤</div>
+            <div class="qty-badge hidden" id="qty-Soda">0</div>
+            <div class="price-tag small">₡800</div>
+            <div class="item-overlay">
+                <span class="item-name">Soda</span>
+            </div>
+        </div>
+
+        <div class="menu-item extra-item" onclick="openManualEntry()">
+            <!-- Custom Item -->
+            <div class="placeholder-img" style="background: #333; color: #aaa;">⌨️</div>
+            <div class="price-tag small">Custom</div>
+            <div class="item-overlay">
+                <span class="item-name">Manual Entry</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+        <div class="order-summary" onclick="toggleSummary()">
+            <div id="summary-text">Cart Empty</div>
+            <div id="total-text">₡0</div>
+        </div>
+        <button class="btn btn-primary" style="height: 100%; border-radius: 0; font-size: 1.5rem;"
+            onclick="showPaymentModal()">CHARGE</button>
+    </div>
+
+    <!-- Manual Entry Modal -->
+    <div id="manual-modal" class="modal hidden">
+        <div class="modal-content animate-pop" style="max-width: 320px;">
+            <h2 style="margin-bottom: 20px;">Enter Price</h2>
+            <!-- Changed to Input for Keyboard Support -->
+            <input type="number" id="manual-input" placeholder="₡0"
+                style="background: #000; color: var(--primary); font-size: 2.5rem; padding: 20px; border-radius: 12px; margin-bottom: 24px; font-weight: bold; border: 1px solid #333; width: 100%; text-align: center; outline: none;">
+
+            <div class="numpad-grid">
+                <button class="btn-num" onclick="numInput(1)">1</button>
+                <button class="btn-num" onclick="numInput(2)">2</button>
+                <button class="btn-num" onclick="numInput(3)">3</button>
+                <button class="btn-num" onclick="numInput(4)">4</button>
+                <button class="btn-num" onclick="numInput(5)">5</button>
+                <button class="btn-num" onclick="numInput(6)">6</button>
+                <button class="btn-num" onclick="numInput(7)">7</button>
+                <button class="btn-num" onclick="numInput(8)">8</button>
+                <button class="btn-num" onclick="numInput(9)">9</button>
+                <button class="btn-num" onclick="numClear()">C</button>
+                <button class="btn-num" onclick="numInput(0)">0</button>
+                <button class="btn-num" onclick="addManualItem()">Add</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="closeManualModal()"
+                style="width: 100%; margin-top: 24px; background: transparent; border: 1px solid #444;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal hidden">
+        <div class="modal-content animate-pop">
+            <h2 style="margin-bottom: 8px;">Checkout</h2>
+            <div style="color: var(--text-muted); margin-bottom: 24px;">Total: <span id="modal-total"
+                    style="color: var(--primary);">₡0</span></div>
+
+            <!-- Customer Name & Wait Time Inputs -->
+            <div style="display: grid; gap: 12px; margin-bottom: 24px; text-align: left;">
+                <label style="font-size: 0.9rem; color: #888;">Customer Name (Optional)</label>
+                <input type="text" id="cust-name" placeholder="John Doe"
+                    style="padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1.1rem;">
+
+                <label style="font-size: 0.9rem; color: #888;">Wait Time (Mins)</label>
+                <input type="number" id="wait-time-input" value="15"
+                    style="padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1.1rem;">
+            </div>
+
+            <h3 style="margin-bottom: 16px; font-size: 1rem; color: #aaa;">Select Payment Method</h3>
+            <div class="payment-options">
+                <button class="btn-payment" onclick="processPayment('CASH')">💵 CASH</button>
+                <button class="btn-payment" onclick="processPayment('CARD')">💳 CARD</button>
+                <button class="btn-payment" onclick="processPayment('OTHER')">📱 OTHER</button>
+            </div>
+            <button class="btn btn-secondary" onclick="closePaymentModal()"
+                style="width: 100%; margin-top: 24px; background: transparent; border: 1px solid #444;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content animate-pop">
+            <div style="font-size: 1.2rem; color: var(--success); font-weight: bold;">ORDER PLACED</div>
+            <div id="success-order-num"
+                style="font-size: 7rem; font-weight: 800; margin: 20px 0; line-height: 1; text-shadow: 0 0 30px rgba(0,230,118,0.3);">
+                #37</div>
+            <div style="margin-bottom: 24px; font-size: 1.1rem; color: #ccc;">Estimated Wait: <span id="success-time"
+                    style="color: var(--primary); font-weight: bold;">15 mins</span></div>
+            <button class="btn btn-primary" onclick="closeSuccessModal()" style="width: 100%;">Next Customer</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/staff.js"></script>
+{% endblock %}

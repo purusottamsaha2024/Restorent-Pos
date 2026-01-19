@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Order Status - Chicken Shop{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 100%; padding: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr;">
+    <header
+        style="padding: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1);">
+        <h1 style="font-size: 2.5rem;">🍗 Order Status</h1>
+        <div class="card"
+            style="margin: 0; padding: 10px 30px; background: rgba(255, 69, 0, 0.2); border: 1px solid var(--accent);">
+            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Est. Wait Time</div>
+            <div id="wait-time" style="font-size: 2rem; font-weight: bold; color: var(--accent);">-- min</div>
+        </div>
+    </header>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; height: 100%;">
+        <!-- Preparing Column -->
+        <div style="border-right: 2px solid rgba(255,255,255,0.1); padding: 24px;">
+            <h2 style="margin-bottom: 24px; color: var(--preparing); display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 2rem;">👨‍🍳</span> PREPARING
+            </h2>
+            <div id="preparing-list"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">
+                <!-- Numbers injected by JS -->
+            </div>
+        </div>
+
+        <!-- Ready Column -->
+        <div style="padding: 24px; background: rgba(0, 230, 118, 0.05);">
+            <h2 style="margin-bottom: 24px; color: var(--success); display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 2rem;">✅</span> READY
+            </h2>
+            <div id="ready-list"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                <!-- Numbers injected by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/customer.js"></script>
+{% endblock %}
