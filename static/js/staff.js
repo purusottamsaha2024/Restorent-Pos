@@ -117,19 +117,70 @@ function addManualItem() {
         alert("Please enter a valid price");
         return;
     }
-    const name = `Custom (₡${price})`;
+    // Use proper currency symbol
+    const name = `Custom (₡${price.toLocaleString()})`;
     addToOrder(name, price, 'placeholder_manual');
     closeManualModal();
 }
 
 // --- Payment & Modals ---
 
-function showPaymentModal() {
+function showReviewModal() {
     if (totalAmount === 0) {
         alert("Please add items to the order first!");
         return;
     }
 
+    // Build review list
+    let reviewHtml = '';
+    for (const [name, item] of Object.entries(currentOrder)) {
+        const itemTotal = item.price * item.qty;
+        reviewHtml += `
+            <div class="review-item" data-name="${name}">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: bold; font-size: 1.1rem;">${item.qty}x ${name}</div>
+                        <div style="color: #888; font-size: 0.9rem;">₡${item.price.toLocaleString()} each</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">₡${itemTotal.toLocaleString()}</div>
+                        <button class="qty-btn" onclick="editReviewItem('${name}', -1)" style="width: 32px; height: 32px; padding: 0;">−</button>
+                        <span style="min-width: 30px; text-align: center;">${item.qty}</span>
+                        <button class="qty-btn" onclick="editReviewItem('${name}', 1)" style="width: 32px; height: 32px; padding: 0;">+</button>
+                        <button class="qty-btn" onclick="removeReviewItem('${name}')" style="width: 32px; height: 32px; padding: 0; background: #ff4444;">×</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('review-items').innerHTML = reviewHtml;
+    document.getElementById('review-total').textContent = `₡${totalAmount.toLocaleString()}`;
+    document.getElementById('review-modal').classList.remove('hidden');
+}
+
+function editReviewItem(name, delta) {
+    if (delta > 0) {
+        addToOrder(name, currentOrder[name].price, currentOrder[name].img);
+    } else {
+        removeFromOrder(name);
+    }
+    showReviewModal(); // Refresh review
+}
+
+function removeReviewItem(name) {
+    delete currentOrder[name];
+    updateUI();
+    showReviewModal(); // Refresh review
+}
+
+function closeReviewModal() {
+    document.getElementById('review-modal').classList.add('hidden');
+}
+
+function proceedToPayment() {
+    closeReviewModal();
+    
     // Pre-calculate Estimated Wait Time based on simple logic for the input field
     let totalPieces = 0;
     for (const [name, item] of Object.entries(currentOrder)) {
@@ -149,6 +200,10 @@ function showPaymentModal() {
     document.getElementById('wait-time-input').value = est;
     document.getElementById('cust-name').value = ""; // Reset name
     document.getElementById('payment-modal').classList.remove('hidden');
+}
+
+function showPaymentModal() {
+    showReviewModal(); // Show review first
 }
 
 function closePaymentModal() {

@@ -138,25 +138,39 @@ def get_queue_stats():
     orders = _read_orders()
     active_orders = [o for o in orders if o.status in [OrderStatus.PENDING, OrderStatus.PREPARING]]
     
-    # Wait time is max of individual orders or sum?
-    # Usually in queue, it's cumulative if single outcome. 
-    # But parallel cooking? 
-    # Let's say parallel capacity is limited. 
-    # Simple logic: sum of wait times might be too high.
-    # Let's average? Or just return the max wait time of current queue + buffer?
-    
     if not active_orders:
         return {"total_estimated_wait_time": 0, "active_orders_count": 0}
 
-    # For new customers, wait time is roughly (Sum of all prep times) / (Concurrent capability)
-    # Let's just sum them for MVP safety, or cap it.
-    total_wait_time = sum(o.estimated_wait_time for o in active_orders)
-    # Reduce it a bit assuming overlap
-    adjusted_wait_time = int(total_wait_time * 0.7) 
+    # More accurate wait time calculation:
+    # For PENDING orders, use their estimated wait time
+    # For PREPARING orders, calculate remaining time based on elapsed time
+    from datetime import datetime
+    now = datetime.now()
+    
+    total_remaining_time = 0
+    for order in active_orders:
+        if order.status == OrderStatus.PENDING:
+            # Use full estimated wait time for pending orders
+            total_remaining_time += order.estimated_wait_time
+        elif order.status == OrderStatus.PREPARING:
+            # Calculate remaining time for preparing orders
+            try:
+                created = datetime.fromisoformat(order.created_at.replace('Z', '+00:00'))
+                if created.tzinfo:
+                    created = created.astimezone().replace(tzinfo=None)
+                elapsed_minutes = (now - created).total_seconds() / 60
+                remaining = max(0, order.estimated_wait_time - elapsed_minutes)
+                total_remaining_time += remaining
+            except:
+                # Fallback to full wait time if date parsing fails
+                total_remaining_time += order.estimated_wait_time
+    
+    # Assume some parallel processing - reduce by 30% but add buffer for new orders
+    adjusted_wait_time = int(total_remaining_time * 0.7) + 5  # Add 5 min buffer
     
     return {
         "active_orders_count": len(active_orders),
-        "total_estimated_wait_time": adjusted_wait_time
+        "total_estimated_wait_time": max(0, adjusted_wait_time)
     }
 
 def get_analytics_data():

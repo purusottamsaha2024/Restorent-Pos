@@ -134,7 +134,7 @@
             <div id="summary-text">Cart Empty</div>
             <div id="total-text">₡0</div>
         </div>
-        <button class="btn btn-primary" style="height: 100%; border-radius: 0; font-size: 1.5rem;"
+        <button class="btn btn-primary" style="height: 100%; border-radius: 0; font-size: 1.5rem; min-width: 120px;"
             onclick="showPaymentModal()">CHARGE</button>
     </div>
 
@@ -163,6 +163,31 @@
 
             <button class="btn btn-secondary" onclick="closeManualModal()"
                 style="width: 100%; margin-top: 24px; background: transparent; border: 1px solid #444;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="review-modal" class="modal hidden">
+        <div class="modal-content animate-pop" style="max-width: 500px;">
+            <h2 style="margin-bottom: 8px;">Review Order</h2>
+            <div style="color: var(--text-muted); margin-bottom: 24px;">Review and edit your order before payment</div>
+            
+            <div id="review-items" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; display: grid; gap: 12px;">
+                <!-- Items injected here -->
+            </div>
+            
+            <div style="border-top: 2px solid #333; padding-top: 16px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.3rem; font-weight: bold;">Total:</span>
+                    <span id="review-total" style="font-size: 2rem; font-weight: bold; color: var(--primary);">₡0</span>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn btn-secondary" onclick="closeReviewModal()"
+                    style="background: transparent; border: 1px solid #444;">Edit Cart</button>
+                <button class="btn btn-primary" onclick="proceedToPayment()">Proceed to Payment</button>
+            </div>
         </div>
     </div>
 

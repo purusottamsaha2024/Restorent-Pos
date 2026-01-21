@@ -90,7 +90,7 @@ function renderKitchen(orders) {
                         ${order.customer_name ? `<div style="font-size: 1.2rem; font-weight: bold; color: var(--primary); margin-top: 4px;">${order.customer_name}</div>` : ''}
                     </div>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        ${getTimerHtml(order.id, order.estimated_wait_time, order.created_at)}
+                        ${getTimerHtml(order.id, order.estimated_wait_time, order.created_at, order.status)}
                         <span class="status-badge" style="background: ${getStatusColor(order.status)}; color: white;">${order.status}</span>
                     </div>
                 </div>
@@ -113,26 +113,63 @@ function renderKitchen(orders) {
 
 function updateTimers() {
     document.querySelectorAll('.timer-container').forEach(el => {
-        const total = parseFloat(el.dataset.total);
         const created = new Date(el.dataset.created);
         const now = new Date();
-        const elapsed = (now - created) / 1000;
-        let remaining = total - elapsed;
-        if (remaining < 0) remaining = 0;
+        const elapsed = (now - created) / 1000; // elapsed seconds
+        
+        // For PREPARING orders, show elapsed time (not countdown)
+        const status = el.dataset.status || 'PREPARING';
+        
+        if (status === 'PREPARING') {
+            // Show elapsed time for PREPARING orders
+            const mins = Math.floor(elapsed / 60);
+            const secs = Math.floor(elapsed % 60);
+            el.querySelector('.timer-text').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            // Color code: green <5min, yellow 5-15min, red >15min
+            const elapsedMins = elapsed / 60;
+            const circle = el.querySelector('.timer-circle-progress');
+            const dashArray = 226;
+            
+            // For elapsed time, we show progress differently - use a max of 30 minutes
+            const maxTime = 30 * 60; // 30 minutes max
+            const progress = Math.min(elapsed / maxTime, 1);
+            const offset = dashArray * progress;
+            circle.style.strokeDashoffset = offset;
+            
+            // Color coding based on elapsed time
+            if (elapsedMins > 15) {
+                circle.style.stroke = '#ff3d00'; // Red - overdue
+                el.querySelector('.timer-text').style.color = '#ff3d00';
+            } else if (elapsedMins > 10) {
+                circle.style.stroke = '#ff9100'; // Orange - getting late
+                el.querySelector('.timer-text').style.color = '#ff9100';
+            } else if (elapsedMins > 5) {
+                circle.style.stroke = '#ffd700'; // Yellow - watch
+                el.querySelector('.timer-text').style.color = '#ffd700';
+            } else {
+                circle.style.stroke = '#00e676'; // Green - on time
+                el.querySelector('.timer-text').style.color = '#00e676';
+            }
+        } else {
+            // For PENDING/READY, show countdown
+            const total = parseFloat(el.dataset.total) || 900;
+            let remaining = total - elapsed;
+            if (remaining < 0) remaining = 0;
 
-        const mins = Math.floor(remaining / 60);
-        const secs = Math.floor(remaining % 60);
-        el.querySelector('.timer-text').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            const mins = Math.floor(remaining / 60);
+            const secs = Math.floor(remaining % 60);
+            el.querySelector('.timer-text').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
 
-        const circle = el.querySelector('.timer-circle-progress');
-        const dashArray = 226;
-        const offset = dashArray - (remaining / total) * dashArray;
-        circle.style.strokeDashoffset = offset;
+            const circle = el.querySelector('.timer-circle-progress');
+            const dashArray = 226;
+            const offset = dashArray - (remaining / total) * dashArray;
+            circle.style.strokeDashoffset = offset;
 
-        // Kitchen specific: Flash red if overdue/close?
-        if (remaining < 60) circle.style.stroke = '#ff3d00';
-        else if (remaining < 300) circle.style.stroke = '#ff9100';
-        else circle.style.stroke = '#00e676';
+            if (remaining < 60) circle.style.stroke = '#ff3d00';
+            else if (remaining < 300) circle.style.stroke = '#ff9100';
+            else circle.style.stroke = '#00e676';
+        }
     });
 }
 
@@ -144,11 +181,11 @@ function getStatusColor(status) {
 }
 
 // Timer Helper
-function getTimerHtml(orderId, waitTime, createdAt) {
-    const totalSecs = waitTime * 60;
+function getTimerHtml(orderId, waitTime, createdAt, status) {
+    const totalSecs = (waitTime && waitTime > 0) ? waitTime * 60 : 900;
     const dashArray = 226;
     return `
-    <div class="timer-container" id="ktimer-${orderId}" data-total="${totalSecs}" data-created="${createdAt}" style="width: 60px; height: 60px;">
+    <div class="timer-container" id="ktimer-${orderId}" data-total="${totalSecs}" data-created="${createdAt}" data-status="${status || 'PREPARING'}" style="width: 60px; height: 60px;">
         <svg class="timer-svg" viewBox="0 0 88 88">
             <circle class="timer-circle-bg" cx="44" cy="44" r="36"></circle>
             <circle class="timer-circle-progress" cx="44" cy="44" r="36" stroke-dasharray="${dashArray}" stroke-dashoffset="0"></circle>

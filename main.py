@@ -71,7 +71,12 @@ async def login(request: Request, username: str = Form(...), password: str = For
 @app.get("/logout")
 async def logout(request: Request):
     request.session.clear()
-    return RedirectResponse(url="/login")
+    # Prevent back button from restoring session
+    response = RedirectResponse(url="/login", status_code=303)
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # HTML Pages
 @app.get("/", response_class=HTMLResponse)
