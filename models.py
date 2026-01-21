@@ -19,6 +19,7 @@ class OrderItem(BaseModel):
     name: str # e.g. "Combo 4"
     quantity: int
     price: float
+    prepTimeMinutes: Optional[int] = None  # Prep time per item (15, 20, 25, or 30)
 
 class OrderCreate(BaseModel):
     items: List[OrderItem]

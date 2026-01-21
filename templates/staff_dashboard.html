@@ -134,6 +134,15 @@
             <div id="summary-text">Cart Empty</div>
             <div id="total-text">₡0</div>
         </div>
+        <div class="ready-time-selector" id="ready-time-selector" style="display: none;">
+            <div style="font-size: 0.75rem; color: #888; margin-bottom: 4px; text-align: center;">Ready Time</div>
+            <div style="display: flex; gap: 6px; justify-content: center;">
+                <button id="ready-time-15" class="ready-time-chip" onclick="setOrderReadyTime(15)" aria-label="15 minutes">15</button>
+                <button id="ready-time-20" class="ready-time-chip" onclick="setOrderReadyTime(20)" aria-label="20 minutes">20</button>
+                <button id="ready-time-25" class="ready-time-chip" onclick="setOrderReadyTime(25)" aria-label="25 minutes">25</button>
+                <button id="ready-time-30" class="ready-time-chip" onclick="setOrderReadyTime(30)" aria-label="30 minutes">30</button>
+            </div>
+        </div>
         <button class="btn btn-primary" style="height: 100%; border-radius: 0; font-size: 1.5rem; min-width: 120px;"
             onclick="showPaymentModal()">CHARGE</button>
     </div>
@@ -177,9 +186,19 @@
             </div>
             
             <div style="border-top: 2px solid #333; padding-top: 16px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <span style="font-size: 1.3rem; font-weight: bold;">Total:</span>
                     <span id="review-total" style="font-size: 2rem; font-weight: bold; color: var(--primary);">₡0</span>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                    <div style="font-size: 0.9rem; color: #aaa; margin-bottom: 12px; text-align: center;">Order Ready Time</div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button id="review-ready-time-15" class="ready-time-chip" onclick="setOrderReadyTime(15); updateReviewReadyTimeUI();" aria-label="15 minutes">15</button>
+                        <button id="review-ready-time-20" class="ready-time-chip" onclick="setOrderReadyTime(20); updateReviewReadyTimeUI();" aria-label="20 minutes">20</button>
+                        <button id="review-ready-time-25" class="ready-time-chip" onclick="setOrderReadyTime(25); updateReviewReadyTimeUI();" aria-label="25 minutes">25</button>
+                        <button id="review-ready-time-30" class="ready-time-chip" onclick="setOrderReadyTime(30); updateReviewReadyTimeUI();" aria-label="30 minutes">30</button>
+                    </div>
+                    <div style="text-align: center; margin-top: 8px; color: var(--primary); font-weight: bold; font-size: 1.1rem;" id="review-total-prep-time">15 min</div>
                 </div>
             </div>
             
@@ -204,9 +223,11 @@
                 <input type="text" id="cust-name" placeholder="John Doe"
                     style="padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1.1rem;">
 
-                <label style="font-size: 0.9rem; color: #888;">Wait Time (Mins)</label>
-                <input type="number" id="wait-time-input" value="15"
-                    style="padding: 12px; background: #333; border: 1px solid #444; color: white; border-radius: 8px; font-size: 1.1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label style="font-size: 0.9rem; color: #888;">Order Ready Time</label>
+                    <span id="wait-time-display" style="color: var(--primary); font-weight: bold; font-size: 1.1rem;">15 min</span>
+                </div>
+                <input type="hidden" id="wait-time-input" value="15">
             </div>
 
             <h3 style="margin-bottom: 16px; font-size: 1rem; color: #aaa;">Select Payment Method</h3>
