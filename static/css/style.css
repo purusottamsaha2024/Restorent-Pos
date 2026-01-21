@@ -39,8 +39,8 @@ body {
 .menu-grid {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
     padding: 12px 8px 110px 8px;
     width: 100%;
     max-width: 1400px;
@@ -48,112 +48,168 @@ body {
     overflow-y: auto;
 }
 
-/* Card Style - Square */
+/* Card Style - Commercial Layout */
 .menu-item {
-    background: var(--card-bg);
-    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(12, 12, 12, 0.95));
+    border-radius: 16px;
     overflow: hidden;
     position: relative;
-    border: var(--glass-border);
+    border: 1px solid rgba(255, 215, 0, 0.15);
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
-    aspect-ratio: 1 / 1;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-height: 180px;
 }
 
 .menu-item:active {
-    transform: scale(0.92);
-    filter: brightness(0.8);
+    transform: scale(0.96);
 }
 
 .menu-item:hover {
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
-    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.25);
+    border-color: rgba(255, 215, 0, 0.4);
     z-index: 5;
-    transform: translateY(-4px);
+    transform: translateY(-3px);
 }
 
-.menu-item img,
-.placeholder-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s;
+/* Selected Item Styles - Different Color & Font to differentiate from number badge */
+.menu-item:has(.qty-badge:not(.hidden)) {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.15));
+    border: 2px solid rgba(138, 43, 226, 0.6);
+    box-shadow: 0 4px 25px rgba(138, 43, 226, 0.4);
 }
 
-.placeholder-img {
+.menu-item:has(.qty-badge:not(.hidden)) .item-name {
+    color: #BA55D3;
+    font-weight: 900;
+    font-size: 1.05rem;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.menu-item:has(.qty-badge:not(.hidden)) .item-info .price-tag {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.35), rgba(75, 0, 130, 0.3));
+    border-color: rgba(138, 43, 226, 0.6);
+    color: #DA70D6;
+    font-weight: 800;
+}
+
+/* Item Number Badge */
+.item-number {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    border: 2px solid rgba(0, 0, 0, 0.2);
 }
 
-.menu-item:hover img,
-.menu-item:hover .placeholder-img {
+/* Image Container - Smaller, Commercial Size */
+.item-image-container {
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    margin-top: 40px;
+}
+
+.item-image-container img,
+.item-image-container .placeholder-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.item-image-container .placeholder-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border-radius: 12px;
+}
+
+.menu-item:hover .item-image-container img,
+.menu-item:hover .item-image-container .placeholder-img {
     transform: scale(1.1);
 }
 
-.item-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
-    padding: 30px 12px 12px 12px;
+/* Item Info Section */
+.item-info {
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    pointer-events: none;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .item-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-    letter-spacing: 0.5px;
+    color: #fff;
+    letter-spacing: 0.3px;
+    text-align: center;
+    line-height: 1.3;
 }
 
-/* Floating Price Tag */
-.price-tag {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(0, 0, 0, 0.7);
+/* Price Tag - In Info Section */
+.item-info .price-tag {
+    position: static;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.15));
     backdrop-filter: blur(4px);
     color: var(--primary);
     padding: 6px 12px;
-    border-radius: 20px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 1rem;
     border: 1px solid rgba(255, 215, 0, 0.3);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto;
 }
 
-.price-tag.small {
+.item-info .price-tag.small {
     font-size: 0.9rem;
-    padding: 4px 10px;
+    padding: 5px 10px;
 }
 
 /* Quantity Badge */
 .qty-badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    background: var(--accent);
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #FF4500, #FF6B35);
     color: white;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(255, 69, 0, 0.5);
     z-index: 10;
     animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes bounceIn {
@@ -173,20 +229,21 @@ body {
 /* Inline qty controls (+ / -) */
 .qty-controls {
     position: absolute;
-    bottom: 12px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(255, 215, 0, 0.35);
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 215, 0, 0.4);
     border-radius: 999px;
-    padding: 8px 12px;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    padding: 6px 10px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 0 12px rgba(255, 215, 0, 0.2);
     opacity: 0;
     transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 15;
 }
 
 .qty-controls.active {
@@ -482,31 +539,65 @@ nav {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .menu-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 12px;
-        padding-bottom: 90px;
-    }
+    @media (max-width: 768px) {
+        .menu-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 12px;
+            padding-bottom: 90px;
+        }
 
-    .menu-item {
-        border-radius: 15px;
-    }
+        .menu-item {
+            border-radius: 14px;
+            min-height: 160px;
+        }
 
-    .item-name {
-        font-size: 1rem;
-    }
+        .item-number {
+            width: 28px;
+            height: 28px;
+            font-size: 0.95rem;
+            top: 6px;
+            left: 6px;
+        }
 
-    .price-tag {
-        font-size: 0.9rem;
-        padding: 4px 10px;
-    }
+        .item-image-container {
+            height: 85px;
+            margin-top: 35px;
+        }
 
-    .price-tag.small {
-        font-size: 0.8rem;
-        padding: 3px 8px;
-    }
+        .item-image-container img,
+        .item-image-container .placeholder-img {
+            width: 65px;
+            height: 65px;
+        }
+
+        .item-image-container .placeholder-img {
+            font-size: 2rem;
+        }
+
+        .item-info {
+            padding: 10px;
+        }
+
+        .item-name {
+            font-size: 0.9rem;
+        }
+
+        .item-info .price-tag {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+        }
+
+        .item-info .price-tag.small {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+        }
+
+        .qty-badge {
+            width: 28px;
+            height: 28px;
+            font-size: 0.9rem;
+        }
 
     .bottom-bar {
         height: 70px;
@@ -562,38 +653,67 @@ nav {
     }
 }
 
-@media (max-width: 480px) {
-    .menu-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 10px;
-        padding-bottom: 80px;
-    }
+    @media (max-width: 480px) {
+        .menu-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px;
+            padding-bottom: 80px;
+        }
 
-    .menu-item {
-        aspect-ratio: 16 / 9;
-        border-radius: 12px;
-    }
+        .menu-item {
+            min-height: 150px;
+            border-radius: 12px;
+        }
 
-    .item-name {
-        font-size: 0.9rem;
-        padding: 20px 10px 10px 10px;
-    }
+        .item-number {
+            width: 24px;
+            height: 24px;
+            font-size: 0.85rem;
+            top: 5px;
+            left: 5px;
+        }
 
-    .price-tag {
-        font-size: 0.85rem;
-        padding: 3px 8px;
-        top: 8px;
-        left: 8px;
-    }
+        .item-image-container {
+            height: 75px;
+            margin-top: 30px;
+        }
 
-    .qty-badge {
-        width: 30px;
-        height: 30px;
-        font-size: 1rem;
-        top: 8px;
-        right: 8px;
-    }
+        .item-image-container img,
+        .item-image-container .placeholder-img {
+            width: 55px;
+            height: 55px;
+        }
+
+        .item-image-container .placeholder-img {
+            font-size: 1.8rem;
+        }
+
+        .item-info {
+            padding: 8px;
+        }
+
+        .item-name {
+            font-size: 0.85rem;
+        }
+
+        .item-info .price-tag {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+        }
+
+        .item-info .price-tag.small {
+            font-size: 0.8rem;
+            padding: 3px 6px;
+        }
+
+        .qty-badge {
+            width: 26px;
+            height: 26px;
+            font-size: 0.85rem;
+            top: 5px;
+            right: 5px;
+        }
 
     .bottom-bar {
         height: 60px;
