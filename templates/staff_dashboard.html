@@ -7,7 +7,7 @@
     <!-- Main Grid -->
     <div class="menu-grid">
         <!-- COMBO 1 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 1 (4 Pc)', 3300, 'combo_1.png')">
+        <div class="menu-item main-item" data-name="Combo 1 (4 Pc)" data-price="3300" data-img="combo_1.png">
             <img src="/static/images/combo_4.png" alt="Combo 1">
             <div class="qty-badge hidden" id="qty-Combo 1 (4 Pc)">0</div>
             <div class="price-tag">₡3,300</div>
@@ -17,7 +17,7 @@
         </div>
 
         <!-- COMBO 2 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 2 (8 Pc)', 6500, 'combo_8.png')">
+        <div class="menu-item main-item" data-name="Combo 2 (8 Pc)" data-price="6500" data-img="combo_8.png">
             <img src="/static/images/combo_8.png" alt="Combo 2">
             <div class="qty-badge hidden" id="qty-Combo 2 (8 Pc)">0</div>
             <div class="price-tag">₡6,500</div>
@@ -27,7 +27,7 @@
         </div>
 
         <!-- COMBO 3 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 3 (12 Pc)', 9700, 'combo_12.png')">
+        <div class="menu-item main-item" data-name="Combo 3 (12 Pc)" data-price="9700" data-img="combo_12.png">
             <img src="/static/images/combo_12.png" alt="Combo 3">
             <div class="qty-badge hidden" id="qty-Combo 3 (12 Pc)">0</div>
             <div class="price-tag">₡9,700</div>
@@ -37,7 +37,7 @@
         </div>
 
         <!-- COMBO 4 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 4 (16 Pc)', 12800, 'combo_16.png')">
+        <div class="menu-item main-item" data-name="Combo 4 (16 Pc)" data-price="12800" data-img="combo_16.png">
             <img src="/static/images/combo_16.png" alt="Combo 4">
             <div class="qty-badge hidden" id="qty-Combo 4 (16 Pc)">0</div>
             <div class="price-tag">₡12,800</div>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- COMBO 5 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 5 (Fam 8)', 10400, 'familiar.png')">
+        <div class="menu-item main-item" data-name="Combo 5 (Fam 8)" data-price="10400" data-img="familiar.png">
             <img src="/static/images/familiar.png" alt="Combo 5">
             <div class="qty-badge hidden" id="qty-Combo 5 (Fam 8)">0</div>
             <div class="price-tag">₡10,400</div>
@@ -57,7 +57,7 @@
         </div>
 
         <!-- COMBO 6 -->
-        <div class="menu-item main-item" onclick="addToOrder('Combo 6 (Fam 16)', 16800, 'familiar.png')">
+        <div class="menu-item main-item" data-name="Combo 6 (Fam 16)" data-price="16800" data-img="familiar.png">
             <img src="/static/images/familiar.png" alt="Combo 6">
             <div class="qty-badge hidden" id="qty-Combo 6 (Fam 16)">0</div>
             <div class="price-tag">₡16,800</div>
@@ -67,7 +67,7 @@
         </div>
 
         <!-- PERSONAL & PORTIONS -->
-        <div class="menu-item main-item" onclick="addToOrder('Personal (2 Pc)', 2000, 'personal.png')">
+        <div class="menu-item main-item" data-name="Personal (2 Pc)" data-price="2000" data-img="personal.png">
             <img src="/static/images/personal.png" alt="Personal">
             <div class="qty-badge hidden" id="qty-Personal (2 Pc)">0</div>
             <div class="price-tag">₡2,000</div>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="menu-item main-item" onclick="addToOrder('Portion Breast+Wing', 1800, 'personal.png')">
+        <div class="menu-item main-item" data-name="Portion Breast+Wing" data-price="1800" data-img="personal.png">
             <!-- Using Personal img for now as fallback -->
             <img src="/static/images/personal.png" alt="Breast+Wing">
             <div class="qty-badge hidden" id="qty-Portion Breast+Wing">0</div>
@@ -86,7 +86,7 @@
             </div>
         </div>
 
-        <div class="menu-item main-item" onclick="addToOrder('Portion Thigh+Leg', 1500, 'personal.png')">
+        <div class="menu-item main-item" data-name="Portion Thigh+Leg" data-price="1500" data-img="personal.png">
             <img src="/static/images/personal.png" alt="Thigh+Leg">
             <div class="qty-badge hidden" id="qty-Portion Thigh+Leg">0</div>
             <div class="price-tag">₡1,500</div>
@@ -98,7 +98,7 @@
         <!-- EXTRAS ROW -->
         <h2 style="grid-column: 1/-1; margin-top: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">EXTRAS</h2>
 
-        <div class="menu-item extra-item" onclick="addToOrder('Fries', 1000, 'fries_placeholder')">
+        <div class="menu-item extra-item" data-name="Fries" data-price="1000" data-img="fries_placeholder">
             <!-- Placeholder for Fries -->
             <div class="placeholder-img" style="background: #e6b800;">🍟</div>
             <div class="qty-badge hidden" id="qty-Fries">0</div>
@@ -108,7 +108,7 @@
             </div>
         </div>
 
-        <div class="menu-item extra-item" onclick="addToOrder('Soda', 800, 'soda_placeholder')">
+        <div class="menu-item extra-item" data-name="Soda" data-price="800" data-img="soda_placeholder">
             <!-- Placeholder for Soda -->
             <div class="placeholder-img" style="background: #cc0000;">🥤</div>
             <div class="qty-badge hidden" id="qty-Soda">0</div>

@@ -12,12 +12,61 @@ function addToOrder(name, price, img) {
     updateUI();
 }
 
+function removeFromOrder(name) {
+    if (!currentOrder[name]) return;
+    currentOrder[name].qty -= 1;
+    if (currentOrder[name].qty <= 0) {
+        delete currentOrder[name];
+    }
+    updateUI();
+}
+
+// Allow tapping the quantity badge to remove 1 (mobile-friendly)
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.menu-item[data-name]');
+    cards.forEach(card => {
+        const name = card.dataset.name;
+        const price = Number(card.dataset.price || 0);
+        const img = card.dataset.img || '';
+
+        // Card click adds item
+        card.addEventListener('click', () => addToOrder(name, price, img));
+
+        // Build +/- controls
+        const controls = document.createElement('div');
+        controls.className = 'qty-controls';
+        controls.innerHTML = `
+            <button class="qty-btn" aria-label="Remove" data-action="minus">−</button>
+            <span class="qty-display" id="display-${name}">0</span>
+            <button class="qty-btn" aria-label="Add" data-action="plus">+</button>
+        `;
+        controls.addEventListener('click', (e) => e.stopPropagation());
+
+        controls.querySelector('[data-action="plus"]').addEventListener('click', () => addToOrder(name, price, img));
+        controls.querySelector('[data-action="minus"]').addEventListener('click', () => removeFromOrder(name));
+
+        card.appendChild(controls);
+    });
+
+    document.querySelectorAll('.qty-badge').forEach(badge => {
+        const name = badge.id.replace('qty-', '');
+        badge.style.cursor = 'pointer';
+        badge.title = 'Tap to remove one';
+        badge.addEventListener('click', (e) => {
+            e.stopPropagation(); // avoid adding another item
+            removeFromOrder(name);
+        });
+    });
+});
+
 function updateUI() {
     totalAmount = 0;
     let summaryText = [];
 
-    // Reset basic badges
+    // Reset basic badges and displays
     document.querySelectorAll('.qty-badge').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.qty-display').forEach(el => el.textContent = '0');
+    document.querySelectorAll('.qty-controls').forEach(el => el.classList.remove('active'));
 
     for (const [name, item] of Object.entries(currentOrder)) {
         totalAmount += item.price * item.qty;
@@ -27,6 +76,11 @@ function updateUI() {
         if (badge) {
             badge.textContent = item.qty;
             badge.classList.remove('hidden');
+        }
+        const display = document.getElementById(`display-${name}`);
+        if (display) {
+            display.textContent = item.qty;
+            display.parentElement.classList.add('active');
         }
     }
 

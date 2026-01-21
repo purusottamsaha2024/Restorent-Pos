@@ -5,30 +5,126 @@
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    .analytics-container {
-        max-width: 1200px;
-        padding: 24px;
-        margin: 0 auto;
-        color: #fff;
+    .analytics-shell {
+        background: radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.04), transparent 35%),
+                    radial-gradient(circle at 80% 10%, rgba(255, 69, 0, 0.05), transparent 30%),
+                    linear-gradient(145deg, #080808 0%, #0b0b0b 50%, #060606 100%);
+        min-height: calc(100vh - 60px);
+        padding: 24px 16px 80px;
     }
 
-    .analytics-container h1 {
-        margin-bottom: 32px;
-        font-size: 2.5rem;
+    .analytics-container {
+        max-width: 1400px;
+        padding: 0 8px;
+        margin: 0 auto;
+        color: #fff;
+        display: grid;
+        gap: 18px;
+    }
+
+    .analytics-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .analytics-header h1 {
+        margin: 0;
+        font-size: 2.6rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .subtext {
+        color: #aaa;
+        font-size: 0.95rem;
+    }
+
+    .glow {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
     }
 
     .kpi-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 24px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .card {
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(12, 12, 12, 0.9));
+        padding: 24px;
+        border: 1px solid rgba(255, 215, 0, 0.18);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        inset: -60%;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.08), transparent 55%);
+        transform: rotate(20deg);
+    }
+
+    .card > * {
+        position: relative;
+        z-index: 2;
     }
 
     .chart-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 14px;
     }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.1rem;
+        color: #aaa;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .recent-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .recent-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 12px;
+        border-radius: 12px;
+        display: grid;
+        gap: 6px;
+        font-size: 0.95rem;
+    }
+
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        background: rgba(255, 215, 0, 0.12);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        color: #ffd700;
+        width: fit-content;
+    }
+
+    .pill.success { background: rgba(0, 230, 118, 0.12); border-color: rgba(0, 230, 118, 0.4); color: #00e676; }
+    .pill.warn { background: rgba(255, 69, 0, 0.12); border-color: rgba(255, 69, 0, 0.4); color: #ff6b6b; }
+    .pill.info { background: rgba(41, 121, 255, 0.12); border-color: rgba(41, 121, 255, 0.4); color: #71a4ff; }
 
     /* Responsive */
     @media (max-width: 1024px) {
@@ -38,91 +134,109 @@
     }
 
     @media (max-width: 768px) {
-        .analytics-container {
-            padding: 20px;
+        .analytics-shell {
+            padding: 16px 10px 60px;
         }
 
-        .analytics-container h1 {
+        .analytics-header h1 {
             font-size: 2rem;
-            margin-bottom: 24px;
         }
 
         .kpi-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 30px;
-        }
-
-        .chart-grid {
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
     }
 
     @media (max-width: 480px) {
-        .analytics-container {
-            padding: 15px;
-        }
-
-        .analytics-container h1 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        .kpi-grid {
-            gap: 12px;
-            margin-bottom: 24px;
+        .analytics-header h1 {
+            font-size: 1.6rem;
         }
 
         .chart-grid {
-            gap: 16px;
+            gap: 14px;
         }
 
         .card {
-            padding: 20px !important;
+            padding: 18px;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="analytics-shell">
 <div class="analytics-container">
-    <h1>📊 Business Analytics</h1>
+    <div class="analytics-header">
+        <h1 class="glow">📊 Hyper Analytics</h1>
+        <div class="subtext">Live store pulse • auto-refreshing insights</div>
+    </div>
 
     <!-- KPI Cards -->
     <div class="kpi-grid">
-        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
-            <div style="color: #888; margin-bottom: 8px;">Total Revenue</div>
-            <div id="kpi-revenue" style="font-size: 2.5rem; font-weight: bold; color: var(--success);">₡0</div>
+        <div class="card">
+            <div class="section-title">Total Revenue</div>
+            <div id="kpi-revenue" style="font-size: 2.4rem; font-weight: 800; color: var(--success);">₡0</div>
         </div>
-        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
-            <div style="color: #888; margin-bottom: 8px;">Total Orders</div>
-            <div id="kpi-orders" style="font-size: 2.5rem; font-weight: bold; color: var(--primary);">0</div>
+        <div class="card">
+            <div class="section-title">Total Orders</div>
+            <div id="kpi-orders" style="font-size: 2.4rem; font-weight: 800; color: var(--primary);">0</div>
         </div>
-        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
-            <div style="color: #888; margin-bottom: 8px;">Avg Order Value</div>
-            <div id="kpi-aov" style="font-size: 2.5rem; font-weight: bold;">₡0</div>
+        <div class="card">
+            <div class="section-title">Avg Order Value</div>
+            <div id="kpi-aov" style="font-size: 2.2rem; font-weight: 800;">₡0</div>
+        </div>
+        <div class="card">
+            <div class="section-title">Avg Items / Order</div>
+            <div id="kpi-items" style="font-size: 2.2rem; font-weight: 800;">0</div>
+        </div>
+        <div class="card">
+            <div class="section-title">Cancel Rate</div>
+            <div id="kpi-cancel" style="font-size: 2.2rem; font-weight: 800; color: #ff6b6b;">0%</div>
         </div>
     </div>
 
     <!-- Charts Row -->
     <div class="chart-grid">
-        <!-- Hourly Sales -->
-        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
-            <h3 style="margin-bottom: 20px;">Hourly Sales (Self-Refreshing)</h3>
+        <div class="card">
+            <div class="section-title">Hourly Sales (Auto-refresh)</div>
             <canvas id="chart-hourly"></canvas>
         </div>
-
-        <!-- Top Items -->
-        <div class="card" style="background: #1a1a1a; padding: 24px; border: 1px solid #333; border-radius: 16px;">
-            <h3 style="margin-bottom: 20px;">Top Selling Items</h3>
+        <div class="card">
+            <div class="section-title">Top Selling Items</div>
             <canvas id="chart-items"></canvas>
         </div>
+        <div class="card">
+            <div class="section-title">Daily Revenue (Last 7 days)</div>
+            <canvas id="chart-daily"></canvas>
+        </div>
+        <div class="card">
+            <div class="section-title">Payment Mix</div>
+            <canvas id="chart-payment"></canvas>
+        </div>
+        <div class="card">
+            <div class="section-title">Order Status</div>
+            <canvas id="chart-status"></canvas>
+        </div>
+        <div class="card">
+            <div class="section-title">Recent Orders</div>
+            <div class="recent-list" id="recent-orders"></div>
+        </div>
     </div>
+</div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+    let hourlyChart, itemChart, dailyChart, paymentChart, statusChart;
+
+    function createGradient(ctx, color) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        return gradient;
+    }
+
     async function fetchAnalytics() {
         const res = await fetch('/api/analytics');
         const data = await res.json();
@@ -134,13 +248,16 @@
         document.getElementById('kpi-revenue').textContent = '₡' + data.total_revenue.toLocaleString();
         document.getElementById('kpi-orders').textContent = data.total_orders;
         document.getElementById('kpi-aov').textContent = '₡' + data.average_order_value.toLocaleString();
+        document.getElementById('kpi-items').textContent = data.average_items_per_order.toFixed(2);
+        document.getElementById('kpi-cancel').textContent = data.cancel_rate + '%';
 
         // Hourly Chart
         const hours = Object.keys(data.hourly_sales).map(h => `${h}:00`);
         const sales = Object.values(data.hourly_sales);
 
-        if (window.hourlyChart) window.hourlyChart.destroy();
-        window.hourlyChart = new Chart(document.getElementById('chart-hourly'), {
+        if (hourlyChart) hourlyChart.destroy();
+        const ctxHour = document.getElementById('chart-hourly').getContext('2d');
+        hourlyChart = new Chart(ctxHour, {
             type: 'line',
             data: {
                 labels: hours,
@@ -148,7 +265,7 @@
                     label: 'Sales (₡)',
                     data: sales,
                     borderColor: '#00e676',
-                    backgroundColor: 'rgba(0, 230, 118, 0.1)',
+                    backgroundColor: createGradient(ctxHour, 'rgba(0, 230, 118, 0.35)'),
                     tension: 0.4,
                     fill: true
                 }]
@@ -160,8 +277,8 @@
         const items = Object.keys(data.top_items);
         const counts = Object.values(data.top_items);
 
-        if (window.itemChart) window.itemChart.destroy();
-        window.itemChart = new Chart(document.getElementById('chart-items'), {
+        if (itemChart) itemChart.destroy();
+        itemChart = new Chart(document.getElementById('chart-items'), {
             type: 'bar',
             data: {
                 labels: items,
@@ -173,6 +290,79 @@
                 }]
             },
             options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+
+        // Daily sales (last 7 days)
+        const days = Object.keys(data.daily_sales);
+        const dayValues = Object.values(data.daily_sales);
+        if (dailyChart) dailyChart.destroy();
+        const ctxDaily = document.getElementById('chart-daily').getContext('2d');
+        dailyChart = new Chart(ctxDaily, {
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: '₡ Revenue',
+                    data: dayValues,
+                    backgroundColor: 'rgba(255, 215, 0, 0.4)',
+                    borderColor: '#FFD700',
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+
+        // Payment mix
+        const payLabels = Object.keys(data.payment_mix);
+        const payValues = Object.values(data.payment_mix);
+        if (paymentChart) paymentChart.destroy();
+        paymentChart = new Chart(document.getElementById('chart-payment'), {
+            type: 'doughnut',
+            data: {
+                labels: payLabels,
+                datasets: [{
+                    data: payValues,
+                    backgroundColor: ['#FFD700', '#2979ff', '#FF4500', '#00e676', '#aa00ff'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '55%' }
+        });
+
+        // Status distribution
+        const statusLabels = Object.keys(data.status_counts);
+        const statusValues = Object.values(data.status_counts);
+        if (statusChart) statusChart.destroy();
+        statusChart = new Chart(document.getElementById('chart-status'), {
+            type: 'bar',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Orders',
+                    data: statusValues,
+                    backgroundColor: ['#FFD700', '#2979ff', '#00e676', '#888', '#ff6b6b'],
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+
+        // Recent orders list
+        const recentContainer = document.getElementById('recent-orders');
+        recentContainer.innerHTML = '';
+        (data.recent_orders || []).slice().reverse().forEach(order => {
+            const div = document.createElement('div');
+            div.className = 'recent-item';
+            div.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span class="pill info">#${order.order_number || '-'}</span>
+                    <span class="pill ${order.status === 'COMPLETED' ? 'success' : order.status === 'CANCELLED' ? 'warn' : ''}">${order.status}</span>
+                </div>
+                <div>Total: ₡${Number(order.total_price || 0).toLocaleString()}</div>
+                <div style="font-size:0.85rem; color:#bbb;">${(order.customer_name || 'Walk-in')}</div>
+            `;
+            recentContainer.appendChild(div);
         });
     }
 

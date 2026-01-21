@@ -14,12 +14,14 @@
 }
 
 body {
-    background-color: var(--bg-color);
+    background: radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 30%),
+                radial-gradient(circle at 80% 10%, rgba(255, 69, 0, 0.05), transparent 25%),
+                #050505;
     color: var(--text-main);
     font-family: 'Outfit', sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -29,15 +31,20 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+    padding: 8px 16px 100px 16px;
+    box-sizing: border-box;
 }
 
 .menu-grid {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding: 16px;
-    padding-bottom: 100px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    padding: 12px 8px 110px 8px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
     overflow-y: auto;
 }
 
@@ -161,6 +168,63 @@ body {
 
 .qty-badge.hidden {
     display: none;
+}
+
+/* Inline qty controls (+ / -) */
+.qty-controls {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 999px;
+    padding: 8px 12px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.qty-controls.active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+}
+
+.menu-item:hover .qty-controls {
+    opacity: 1;
+}
+
+.qty-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    background: linear-gradient(135deg, #111, #222);
+    color: #ffd700;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.qty-btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    border-color: #ffd700;
+}
+
+.qty-display {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
 }
 
 /* Bottom Bar */
@@ -308,6 +372,12 @@ nav a[href="/logout"]:hover {
     border-color: rgba(255, 107, 107, 0.5);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Nav subtle glow */
+nav {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+    background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%);
 }
 
 /* Responsive Design */

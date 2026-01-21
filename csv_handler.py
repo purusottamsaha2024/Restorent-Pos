@@ -165,8 +165,15 @@ def get_analytics_data():
     total_orders = len(orders)
     items_sold = {}
     hourly_sales = {}
+    daily_sales = {}
+    status_counts = {status.value: 0 for status in OrderStatus}
+    payment_mix = {pm.value: 0 for pm in PaymentMethod}
+    total_items = 0
     
     for order in orders:
+        status_counts[order.status.value] = status_counts.get(order.status.value, 0) + 1
+        payment_mix[order.payment_method.value] = payment_mix.get(order.payment_method.value, 0) + 1
+
         if order.status == OrderStatus.CANCELLED:
             continue
             
@@ -177,12 +184,15 @@ def get_analytics_data():
             dt = datetime.fromisoformat(order.created_at)
             hour = dt.hour
             hourly_sales[hour] = hourly_sales.get(hour, 0) + order.total_price
+            day_key = dt.date().isoformat()
+            daily_sales[day_key] = daily_sales.get(day_key, 0) + order.total_price
         except:
             pass
         
         # Items
         for item in order.items:
             items_sold[item.name] = items_sold.get(item.name, 0) + item.quantity
+            total_items += item.quantity
             
     # Sort Hourly
     sorted_hourly = dict(sorted(hourly_sales.items()))
@@ -190,7 +200,13 @@ def get_analytics_data():
     # Sort Items by popularity
     sorted_items = dict(sorted(items_sold.items(), key=lambda item: item[1], reverse=True)[:5])
     
+    # Last 7 days sales (sorted)
+    sorted_daily = dict(sorted(daily_sales.items())[-7:])
+    
     avg_order_value = total_revenue / total_orders if total_orders > 0 else 0
+    avg_items_per_order = total_items / total_orders if total_orders > 0 else 0
+    cancelled = status_counts.get(OrderStatus.CANCELLED.value, 0)
+    cancel_rate = round((cancelled / total_orders) * 100, 2) if total_orders else 0
     
     return {
         "total_revenue": total_revenue,
@@ -198,5 +214,10 @@ def get_analytics_data():
         "average_order_value": round(avg_order_value, 2),
         "hourly_sales": sorted_hourly,
         "top_items": sorted_items,
-        "recent_orders": [o.dict() for o in orders[-10:]]
+        "recent_orders": [o.dict() for o in orders[-10:]],
+        "status_counts": status_counts,
+        "payment_mix": payment_mix,
+        "daily_sales": sorted_daily,
+        "average_items_per_order": round(avg_items_per_order, 2),
+        "cancel_rate": cancel_rate
     }
