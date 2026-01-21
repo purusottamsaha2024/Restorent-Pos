@@ -26,20 +26,23 @@ async function fetchState() {
             const orders = await ordersRes.json();
             const stats = await statsRes.json();
 
-            renderCustomerView(orders);
-            document.getElementById('wait-time').textContent = stats.total_estimated_wait_time + ' min';
+            renderCustomerView(orders, stats);
+            document.getElementById('wait-time').textContent = ((stats.total_estimated_wait_time ?? 0) || 0) + ' min';
         }
     } catch (e) {
         console.error("Polling error", e);
     }
 }
 
-function renderCustomerView(orders) {
+function renderCustomerView(orders, stats = {}) {
     const preparingList = document.getElementById('preparing-list');
     const readyList = document.getElementById('ready-list');
 
     preparingList.innerHTML = '';
     readyList.innerHTML = '';
+
+    let preparingCount = 0;
+    let readyCount = 0;
 
     orders.forEach(order => {
         // Visualize items for "Preparing" orders
@@ -56,6 +59,7 @@ function renderCustomerView(orders) {
         const itemsContainer = itemsHtml ? `<div style="display: flex; gap: 4px; justify-content: center; margin-top: 10px; flex-wrap: wrap;">${itemsHtml}</div>` : '';
 
         if (order.status === 'PREPARING' || order.status === 'PENDING') {
+            preparingCount += 1;
             const card = document.createElement('div');
             card.className = 'card animate-in';
             card.style = "border: 1px solid var(--preparing); text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center;";
@@ -75,6 +79,7 @@ function renderCustomerView(orders) {
             `;
             preparingList.appendChild(card);
         } else if (order.status === 'READY') {
+            readyCount += 1;
             const card = document.createElement('div');
             card.className = 'card animate-in';
             card.style = "background: rgba(0, 230, 118, 0.1); border: 2px solid var(--success); text-align: center; padding: 30px;";
@@ -88,11 +93,22 @@ function renderCustomerView(orders) {
             readyList.appendChild(card);
         }
     });
+
+    // Update stat pills
+    const totalActive = preparingCount + readyCount;
+    const safeSet = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    safeSet('stat-preparing', preparingCount || 0);
+    safeSet('stat-ready', readyCount || 0);
+    safeSet('stat-total', (stats.active_orders_count ?? totalActive ?? 0) || 0);
 }
 
 function updateTimers() {
     document.querySelectorAll('.timer-container').forEach(el => {
-        const total = parseFloat(el.dataset.total); // seconds
+        let total = parseFloat(el.dataset.total); // seconds
+        if (!total || total <= 0) total = 900; // 15 min fallback
         const created = new Date(el.dataset.created);
         const now = new Date();
         const elapsed = (now - created) / 1000;
@@ -127,7 +143,8 @@ setInterval(fetchState, 3000);
 
 // Helper to create Timer HTML
 function getTimerHtml(orderId, waitTime, createdAt) {
-    const totalSecs = waitTime * 60;
+    const safeWait = (waitTime && waitTime > 0) ? waitTime : 15; // default 15 mins if missing
+    const totalSecs = safeWait * 60;
     const now = new Date();
     const created = new Date(createdAt);
     const elapsed = (now - created) / 1000;
@@ -142,7 +159,7 @@ function getTimerHtml(orderId, waitTime, createdAt) {
             <circle class="timer-circle-bg" cx="44" cy="44" r="36"></circle>
             <circle class="timer-circle-progress" cx="44" cy="44" r="36" stroke-dasharray="${dashArray}" stroke-dashoffset="0"></circle>
         </svg>
-        <div class="timer-text">--:--</div>
+        <div class="timer-text">${Math.floor(remaining/60)}:${Math.floor(remaining%60).toString().padStart(2,'0')}</div>
     </div>`;
 }
 

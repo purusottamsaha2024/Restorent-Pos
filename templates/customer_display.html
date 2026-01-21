@@ -4,68 +4,141 @@
 
 {% block head %}
 <style>
+    .customer-shell {
+        min-height: calc(100vh - 60px);
+        background: radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.06), transparent 35%),
+                    radial-gradient(circle at 80% 0%, rgba(255, 69, 0, 0.07), transparent 32%),
+                    linear-gradient(135deg, #050505 0%, #0a0a0a 60%, #050505 100%);
+        padding: 16px 18px 80px;
+        box-sizing: border-box;
+    }
+
     .customer-container {
-        max-width: 100%;
-        padding: 0;
-        height: calc(100vh - 60px);
+        max-width: 1400px;
+        margin: 0 auto;
         display: grid;
-        grid-template-rows: auto 1fr;
+        gap: 18px;
     }
 
-    .customer-header {
-        padding: 20px;
+    .hero {
+        background: linear-gradient(135deg, rgba(17,17,17,0.9), rgba(8,8,8,0.9));
+        border: 1px solid rgba(255, 215, 0, 0.18);
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: 0 18px 60px rgba(0,0,0,0.5);
+        display: grid;
+        gap: 10px;
+    }
+
+    .hero-top {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
         flex-wrap: wrap;
-        gap: 15px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
     }
 
-    .customer-header h1 {
-        font-size: 2rem;
+    .hero-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 2.1rem;
         margin: 0;
+    }
+
+    .hero-sub {
+        color: #d9d9d9;
+        font-size: 0.95rem;
     }
 
     .wait-time-card {
         margin: 0;
-        padding: 10px 20px;
-        background: rgba(255, 69, 0, 0.2);
-        border: 1px solid var(--accent);
+        padding: 12px 18px;
+        background: rgba(255, 215, 0, 0.1);
+        border: 1px solid rgba(255, 215, 0, 0.35);
         border-radius: 12px;
         text-align: center;
+        min-width: 160px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
 
     .wait-time-label {
         font-size: 0.85rem;
         text-transform: uppercase;
         letter-spacing: 1px;
+        color: #f1c40f;
     }
 
     #wait-time {
-        font-size: 1.8rem;
-        font-weight: bold;
+        font-size: 1.9rem;
+        font-weight: 800;
         color: var(--accent);
+        margin-top: 6px;
     }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 12px 14px;
+        display: grid;
+        gap: 4px;
+    }
+
+    .stat-label {
+        color: #aaa;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+        font-weight: 800;
+    }
+
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        background: rgba(255, 215, 0, 0.12);
+        border: 1px solid rgba(255, 215, 0, 0.35);
+        color: #ffd700;
+    }
+
+    .pill.success { background: rgba(0, 230, 118, 0.12); border-color: rgba(0, 230, 118, 0.4); color: #00e676; }
+    .pill.warn { background: rgba(255, 69, 0, 0.12); border-color: rgba(255, 69, 0, 0.4); color: #ff6b6b; }
 
     .customer-columns {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        height: 100%;
-        overflow-y: auto;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+        min-height: 520px;
     }
 
     .column-section {
-        padding: 20px;
+        padding: 18px;
         overflow-y: auto;
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(17,17,17,0.85), rgba(10,10,10,0.92));
+        box-shadow: 0 14px 45px rgba(0,0,0,0.45);
     }
 
     .preparing-column {
-        border-right: 2px solid rgba(255,255,255,0.1);
+        border-right: none;
     }
 
     .ready-column {
-        background: rgba(0, 230, 118, 0.05);
+        background: linear-gradient(180deg, rgba(0, 230, 118, 0.05), rgba(0,0,0,0.2));
     }
 
     .section-title {
@@ -93,20 +166,12 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-        .customer-header {
-            padding: 15px;
+        .customer-shell {
+            padding: 12px 12px 60px;
         }
 
-        .customer-header h1 {
-            font-size: 1.5rem;
-        }
-
-        .wait-time-card {
-            padding: 8px 16px;
-        }
-
-        #wait-time {
-            font-size: 1.5rem;
+        .hero-title {
+            font-size: 1.7rem;
         }
 
         .customer-columns {
@@ -115,12 +180,11 @@
         }
 
         .preparing-column {
-            border-right: none;
             border-bottom: 2px solid rgba(255,255,255,0.1);
         }
 
         .column-section {
-            padding: 15px;
+            padding: 16px;
         }
 
         .section-title {
@@ -135,33 +199,16 @@
     }
 
     @media (max-width: 480px) {
-        .customer-container {
-            height: calc(100vh - 80px);
-        }
-
-        .customer-header {
-            padding: 12px;
-        }
-
-        .customer-header h1 {
-            font-size: 1.3rem;
+        .hero-title {
+            font-size: 1.4rem;
         }
 
         .wait-time-card {
-            padding: 6px 12px;
             width: 100%;
         }
 
-        .wait-time-label {
-            font-size: 0.75rem;
-        }
-
-        #wait-time {
-            font-size: 1.3rem;
-        }
-
         .column-section {
-            padding: 12px;
+            padding: 14px;
         }
 
         .section-title {
@@ -182,14 +229,35 @@
 {% endblock %}
 
 {% block content %}
+<div class="customer-shell">
 <div class="customer-container">
-    <header class="customer-header">
-        <h1>🍗 Order Status</h1>
-        <div class="wait-time-card">
-            <div class="wait-time-label">Est. Wait Time</div>
-            <div id="wait-time">-- min</div>
+    <div class="hero">
+        <div class="hero-top">
+            <h1 class="hero-title">🍗 Order Radar</h1>
+            <div class="wait-time-card">
+                <div class="wait-time-label">Est. Wait Time</div>
+                <div id="wait-time">-- min</div>
+            </div>
         </div>
-    </header>
+        <div class="hero-sub">Live kitchen feed • watch your number move from preparing to ready</div>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-label">Preparing</div>
+                <div class="stat-value" id="stat-preparing">--</div>
+                <div class="pill">Cooking</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Ready</div>
+                <div class="stat-value" id="stat-ready">--</div>
+                <div class="pill success">Pickup now</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Active</div>
+                <div class="stat-value" id="stat-total">--</div>
+                <div class="pill info">In progress</div>
+            </div>
+        </div>
+    </div>
 
     <div class="customer-columns">
         <!-- Preparing Column -->
@@ -212,6 +280,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 
