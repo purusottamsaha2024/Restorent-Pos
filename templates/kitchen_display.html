@@ -2,11 +2,72 @@
 
 {% block title %}Kitchen View{% endblock %}
 
+{% block head %}
+<style>
+    .kitchen-container {
+        max-width: 100%;
+        padding: 20px;
+        min-height: calc(100vh - 60px);
+    }
+
+    .kitchen-container h1 {
+        margin-bottom: 24px;
+        font-size: 2rem;
+    }
+
+    #kitchen-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        #kitchen-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .kitchen-container {
+            padding: 15px;
+        }
+
+        .kitchen-container h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        #kitchen-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .kitchen-container {
+            padding: 12px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .kitchen-container h1 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        #kitchen-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width: 100%; padding: 24px;">
-    <h1 style="margin-bottom: 24px;">👨‍🍳 KITCHEN QUEUE</h1>
-    <div id="kitchen-grid"
-        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+<div class="kitchen-container">
+    <h1>👨‍🍳 KITCHEN QUEUE</h1>
+    <div id="kitchen-grid">
         <!-- Orders Injected Here -->
     </div>
 </div>

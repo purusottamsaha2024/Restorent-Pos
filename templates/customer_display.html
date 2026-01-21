@@ -2,37 +2,212 @@
 
 {% block title %}Order Status - Chicken Shop{% endblock %}
 
+{% block head %}
+<style>
+    .customer-container {
+        max-width: 100%;
+        padding: 0;
+        height: calc(100vh - 60px);
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+
+    .customer-header {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .customer-header h1 {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .wait-time-card {
+        margin: 0;
+        padding: 10px 20px;
+        background: rgba(255, 69, 0, 0.2);
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .wait-time-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    #wait-time {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: var(--accent);
+    }
+
+    .customer-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .column-section {
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .preparing-column {
+        border-right: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .ready-column {
+        background: rgba(0, 230, 118, 0.05);
+    }
+
+    .section-title {
+        margin-bottom: 20px;
+        color: var(--preparing);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.5rem;
+    }
+
+    .ready-column .section-title {
+        color: var(--success);
+    }
+
+    .order-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .ready-list {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .customer-header {
+            padding: 15px;
+        }
+
+        .customer-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .wait-time-card {
+            padding: 8px 16px;
+        }
+
+        #wait-time {
+            font-size: 1.5rem;
+        }
+
+        .customer-columns {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
+        }
+
+        .preparing-column {
+            border-right: none;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .column-section {
+            padding: 15px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .order-list, .ready-list {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .customer-container {
+            height: calc(100vh - 80px);
+        }
+
+        .customer-header {
+            padding: 12px;
+        }
+
+        .customer-header h1 {
+            font-size: 1.3rem;
+        }
+
+        .wait-time-card {
+            padding: 6px 12px;
+            width: 100%;
+        }
+
+        .wait-time-label {
+            font-size: 0.75rem;
+        }
+
+        #wait-time {
+            font-size: 1.3rem;
+        }
+
+        .column-section {
+            padding: 12px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .section-title span {
+            font-size: 1.5rem;
+        }
+
+        .order-list, .ready-list {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width: 100%; padding: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr;">
-    <header
-        style="padding: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1);">
-        <h1 style="font-size: 2.5rem;">🍗 Order Status</h1>
-        <div class="card"
-            style="margin: 0; padding: 10px 30px; background: rgba(255, 69, 0, 0.2); border: 1px solid var(--accent);">
-            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Est. Wait Time</div>
-            <div id="wait-time" style="font-size: 2rem; font-weight: bold; color: var(--accent);">-- min</div>
+<div class="customer-container">
+    <header class="customer-header">
+        <h1>🍗 Order Status</h1>
+        <div class="wait-time-card">
+            <div class="wait-time-label">Est. Wait Time</div>
+            <div id="wait-time">-- min</div>
         </div>
     </header>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; height: 100%;">
+    <div class="customer-columns">
         <!-- Preparing Column -->
-        <div style="border-right: 2px solid rgba(255,255,255,0.1); padding: 24px;">
-            <h2 style="margin-bottom: 24px; color: var(--preparing); display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 2rem;">👨‍🍳</span> PREPARING
+        <div class="column-section preparing-column">
+            <h2 class="section-title">
+                <span>👨‍🍳</span> PREPARING
             </h2>
-            <div id="preparing-list"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">
+            <div id="preparing-list" class="order-list">
                 <!-- Numbers injected by JS -->
             </div>
         </div>
 
         <!-- Ready Column -->
-        <div style="padding: 24px; background: rgba(0, 230, 118, 0.05);">
-            <h2 style="margin-bottom: 24px; color: var(--success); display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 2rem;">✅</span> READY
+        <div class="column-section ready-column">
+            <h2 class="section-title">
+                <span>✅</span> READY
             </h2>
-            <div id="ready-list"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+            <div id="ready-list" class="order-list ready-list">
                 <!-- Numbers injected by JS -->
             </div>
         </div>
